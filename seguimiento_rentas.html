@@ -34,13 +34,13 @@
   --radius:14px; --radius-sm:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
+html,body{height:100dvh;max-height:100dvh;overflow:hidden}
 
 /* ── Canvas background ── */
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
 body{font-family:var(--sf);color:var(--label);font-size:15px;
-  background:var(--bg);display:flex;flex-direction:column;position:relative}
+  background:var(--bg);display:flex;flex-direction:column;position:relative;height:100dvh}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -114,64 +114,18 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 .kpi-icon{font-size:18px;opacity:.5}
 .kpi-lbl{font-size:12px;color:var(--label2);line-height:1.3;margin-top:auto}
 
-/* ── ESTADO BARRA HORIZONTAL ── */
-.estado-bar{
-  display:flex;align-items:center;gap:2px;flex-shrink:0;
-  padding:5px 14px;
-  background:var(--glass2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border2);position:relative;z-index:10;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-}
-.estado-bar::-webkit-scrollbar{display:none}
-.estado-label{
-  font-size:11px;font-weight:700;color:var(--label3);text-transform:uppercase;
-  letter-spacing:.6px;white-space:nowrap;margin-right:4px;flex-shrink:0;
-}
-.nav-item{
-  display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;
-  font-size:11px;cursor:pointer;color:var(--label2);
-  border:1px solid transparent;background:none;white-space:nowrap;
-  font-family:var(--sf);transition:background .1s,color .1s;flex-shrink:0;
-}
-.nav-item:active{background:var(--fill2)}
-.nav-item.activo{background:rgba(0,200,255,.12);color:var(--label);font-weight:600;border-color:rgba(0,200,255,.2)}
-.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.nd-todos    {background:var(--label3)}
-.nd-vigente  {background:var(--verde);box-shadow:0 0 5px rgba(48,209,88,.5)}
-.nd-porvencer{background:var(--ambar);box-shadow:0 0 5px rgba(255,159,10,.5)}
-.nd-hoy      {background:var(--ambar)}
-.nd-vencido  {background:var(--rojo);box-shadow:0 0 5px rgba(255,69,58,.5)}
-.nd-concluido{background:var(--label3)}
-.nav-count{font-size:10px;background:var(--fill2);padding:1px 5px;border-radius:99px;color:var(--label2)}
-.estado-bar-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;padding-left:10px;border-left:1px solid var(--border2)}
-.btn-csv-bar{
-  display:flex;align-items:center;gap:4px;padding:5px 9px;
-  background:var(--fill2);border:1px solid var(--border2);border-radius:var(--radius-sm);
-  font-family:var(--sf);font-size:11px;color:var(--label2);cursor:pointer;white-space:nowrap;
-}
-.btn-csv-bar:active{opacity:.7}
+
 
 /* ── APP BODY (sin sidebar) ── */
-.app-body{flex:1;display:flex;overflow:hidden;position:relative;z-index:10}
+.app-body{flex:1;display:flex;overflow:hidden;position:relative;z-index:10;min-height:0}
 50%{opacity:.3}}
 
 /* ── MAIN ── */
-.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.main-toolbar{
-  padding:7px 14px;display:flex;gap:8px;align-items:center;flex-shrink:0;
-  border-bottom:1px solid var(--border2);
-}
-.ios-select{
-  padding:5px 10px;background:var(--fill2);border:1px solid var(--border2);
-  border-radius:var(--radius-sm);font-family:var(--sf);font-size:11px;color:var(--label);cursor:pointer;
-  -webkit-appearance:none;appearance:none;
-}
-.ios-select option{background:#0D1828}
-.ios-select:focus{outline:none;border-color:rgba(0,200,255,.3)}
-.toolbar-count{font-size:11px;color:var(--label3);margin-left:auto}
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+
 
 /* ── TABLA ── */
-.tabla-scroll{flex:1;overflow:auto;padding:10px 14px 18px;display:flex;flex-direction:column}
+.tabla-scroll{flex:1;overflow:auto;padding:10px 14px 18px;display:flex;flex-direction:column;min-height:0}
 .tabla-wrap{
   background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
@@ -214,7 +168,8 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
   cursor:pointer;white-space:nowrap;
 }
 .btn-edit:active{opacity:.7}
-.vacio{padding:60px 20px;text-align:center;color:var(--label2)}
+.vacio{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:var(--label2);min-height:300px}
 .vacio p{font-size:15px;margin-top:10px} .vacio small{font-size:13px;color:var(--label3)}
 
 /* ── SHEET MODAL ── */
@@ -296,7 +251,6 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
   th{font-size:10px;padding:8px 10px}
   td{font-size:12.5px;padding:8px 10px}
   .btn-nueva{font-size:13px;padding:7px 12px}
-  .main-toolbar{padding:7px 12px}
   .tabla-scroll{padding:8px 12px 14px}
 }
 </style>
@@ -325,19 +279,19 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
 
 <!-- KPI ROW -->
 <div class="kpi-row">
-  <div class="kpi-card c-activos" data-filtro="activos" onclick="kpiFiltro('activos')">
+  <div class="kpi-card c-nuevos" data-filtro="todos" onclick="kpiFiltro('todos')">
     <div class="kpi-top">
-      <div class="kpi-num" id="kTotal">0</div>
+      <div class="kpi-num" id="kTodos">0</div>
+      <span class="kpi-icon">📋</span>
+    </div>
+    <div class="kpi-lbl">Todos</div>
+  </div>
+  <div class="kpi-card c-activos" data-filtro="vigente" onclick="kpiFiltro('vigente')">
+    <div class="kpi-top">
+      <div class="kpi-num" id="kVigente">0</div>
       <span class="kpi-icon">🏥</span>
     </div>
     <div class="kpi-lbl">Equipos activos</div>
-  </div>
-  <div class="kpi-card c-nuevos" data-filtro="nuevosMes" onclick="kpiFiltro('nuevosMes')">
-    <div class="kpi-top">
-      <div class="kpi-num" id="kNuevos">0</div>
-      <span class="kpi-icon">📋</span>
-    </div>
-    <div class="kpi-lbl">Contratos nuevos este mes</div>
   </div>
   <div class="kpi-card c-porvencer" data-filtro="porvencer" onclick="kpiFiltro('porvencer')">
     <div class="kpi-top">
@@ -346,52 +300,12 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
     </div>
     <div class="kpi-lbl">Por vencer (≤ 7 días)</div>
   </div>
-  <div class="kpi-card c-concluidos" data-filtro="concluidos" onclick="kpiFiltro('concluidos')">
+  <div class="kpi-card c-concluidos" data-filtro="concluido" onclick="kpiFiltro('concluido')">
     <div class="kpi-top">
       <div class="kpi-num" id="kConcluidos">0</div>
       <span class="kpi-icon">✅</span>
     </div>
-    <div class="kpi-lbl">Concluidos / por recoger</div>
-  </div>
-</div>
-
-<!-- ESTADO BARRA HORIZONTAL -->
-<div class="estado-bar">
-  <span class="estado-label">ESTADO</span>
-  <button class="nav-item activo" data-estado="" onclick="setEstado('')">
-    <span class="nav-dot nd-todos"></span>Todos
-    
-  </button>
-  <button class="nav-item" data-estado="vigente" onclick="setEstado('vigente')">
-    <span class="nav-dot nd-vigente"></span>Vigente
-    
-  </button>
-  <button class="nav-item" data-estado="porvencer" onclick="setEstado('porvencer')">
-    <span class="nav-dot nd-porvencer"></span>Por vencer
-    
-  </button>
-  <button class="nav-item" data-estado="hoy" onclick="setEstado('hoy')">
-    <span class="nav-dot nd-hoy"></span>Vence hoy
-    
-  </button>
-  <button class="nav-item" data-estado="vencido" onclick="setEstado('vencido')">
-    <span class="nav-dot nd-vencido"></span>Vencido
-    
-  </button>
-  <button class="nav-item" data-estado="concluido" onclick="setEstado('concluido')">
-    <span class="nav-dot nd-concluido"></span>Concluido
-    
-  </button>
-  <div class="estado-bar-actions">
-    <button class="btn-csv-bar" onclick="exportarXLSX()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Excel
-    </button>
-    <button class="btn-csv-bar" style="color:var(--cian)" onclick="document.getElementById('fileImport').click()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Importar
-    </button>
-    <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="importarXLSX(this)">
+    <div class="kpi-lbl">Concluido / Por recoger</div>
   </div>
 </div>
 
@@ -400,15 +314,7 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
 
   <!-- MAIN -->
   <main class="main">
-    <div class="main-toolbar">
-      <select class="ios-select" id="filtroArticulo" onchange="render()"><option value="">Todos los equipos</option></select>
-      <select class="ios-select" id="filtroTipo" onchange="render()">
-        <option value="">Todos los tipos</option>
-        <option>Nuevo</option>
-        <option>Renovación</option>
-      </select>
-      <span class="toolbar-count" id="toolbarInfo"></span>
-    </div>
+
 
     <div class="tabla-scroll">
       <div class="tabla-wrap">
@@ -546,7 +452,7 @@ const LS='janova_rentas_v1';
 let datos = localStorage.getItem(LS) !== null
   ? JSON.parse(localStorage.getItem(LS))
   : [];
-let editId=null, orden={campo:'dias',dir:1}, kpiActivo='', estadoActivo='';
+let editId=null, orden={campo:'dias',dir:1}, kpiActivo='';
 
 function hoy0(){const h=new Date();h.setHours(0,0,0,0);return h;}
 function fechaConclusion(iso,meses){
@@ -575,49 +481,38 @@ const fmtF=d=>d?d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year
 const fmtISO=iso=>{if(!iso)return '—';const[y,m,d]=iso.split('-');return `${d}/${m}/${y}`;};
 
 function calcKPIs(){
-  const h=hoy0(),mes=h.getMonth(),anio=h.getFullYear();
-  let act=0,nue=0,pv=0,con=0,cts={todos:datos.length,vigente:0,porvencer:0,hoy:0,vencido:0,concluido:0};
+  let todos=datos.length, vigente=0, pv=0, con=0;
   datos.forEach(r=>{
-    const e=estado(r);cts[e]=(cts[e]||0)+1;
-    if(e==='concluido'){con++;return;}
-    if(e==='vencido') con++; else act++;
+    const e=estado(r);
+    if(e==='vigente') vigente++;
     if(e==='porvencer'||e==='hoy') pv++;
-    const fe=new Date(r.fechaEntrega+'T00:00');
-    if(fe.getMonth()===mes&&fe.getFullYear()===anio&&r.tipo==='Nuevo') nue++;
+    if(e==='concluido'||e==='vencido') con++;
   });
-  kTotal.textContent=act;kNuevos.textContent=nue;kPorVencer.textContent=pv;kConcluidos.textContent=con;
-  ['todos','vigente','porvencer','hoy','vencido','concluido'].forEach(k=>{
-    const el=document.getElementById('nc-'+k);if(el)el.textContent=cts[k]||0;
-  });
+  kTodos.textContent=todos;
+  kVigente.textContent=vigente;
+  kPorVencer.textContent=pv;
+  kConcluidos.textContent=con;
 }
 
 function kpiFiltro(f){
-  kpiActivo=kpiActivo===f?'':f; estadoActivo='';
+  kpiActivo=kpiActivo===f?'':f;
+  estadoActivo='';
   document.querySelectorAll('.kpi-card').forEach(k=>k.classList.toggle('sel',k.dataset.filtro===kpiActivo));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('activo'));
   render();
 }
-function setEstado(e){
-  estadoActivo=e;kpiActivo='';
-  document.querySelectorAll('.kpi-card').forEach(k=>k.classList.remove('sel'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('activo',n.dataset.estado===e));
-  render();
-}
+function setEstado(e){} // legacy — eliminado con barra horizontal
 
 function render(){
   calcKPIs();
   const q=busqueda.value.toLowerCase().trim();
-  const fa=filtroArticulo.value,ft=filtroTipo.value,h=hoy0();
+  const h=hoy0();
   let lista=datos.map(r=>({...r,_e:estado(r),_fc:fechaConclusion(r.fechaEntrega,r.meses)}))
     .map(r=>({...r,_d:r._fc?diasRestantes(r._fc):0}));
 
-  if(kpiActivo==='activos')   lista=lista.filter(r=>!['concluido','vencido'].includes(r._e));
+  if(kpiActivo==='todos')     lista=lista; // sin filtro
+  if(kpiActivo==='vigente')   lista=lista.filter(r=>r._e==='vigente');
   if(kpiActivo==='porvencer') lista=lista.filter(r=>['porvencer','hoy'].includes(r._e));
-  if(kpiActivo==='concluidos')lista=lista.filter(r=>['concluido','vencido'].includes(r._e));
-  if(kpiActivo==='nuevosMes') lista=lista.filter(r=>{const f=new Date(r.fechaEntrega+'T00:00');return f.getMonth()===h.getMonth()&&f.getFullYear()===h.getFullYear()&&r.tipo==='Nuevo';});
-  if(estadoActivo) lista=lista.filter(r=>r._e===estadoActivo);
-  if(fa) lista=lista.filter(r=>r.articulo===fa);
-  if(ft) lista=lista.filter(r=>r.tipo===ft);
+  if(kpiActivo==='concluido') lista=lista.filter(r=>['concluido','vencido'].includes(r._e));
   if(q)  lista=lista.filter(r=>[r.cliente,r.articulo,r.idEquipo,r.telefono,r.direccion,String(r.id)].join(' ').toLowerCase().includes(q));
 
   lista.sort((a,b)=>{
@@ -647,10 +542,8 @@ function render(){
       <td><button class="btn-edit" onclick="abrirModal(${r.id})">Editar</button></td>
     </tr>`;
   }).join('');
-  vacio.style.display=lista.length?'none':'block';
-  toolbarInfo.textContent=lista.length+' registro'+(lista.length!==1?'s':'');
-  const arts=[...new Set(datos.map(r=>r.articulo))].sort();
-  filtroArticulo.innerHTML='<option value="">Todos los equipos</option>'+arts.map(a=>`<option ${a===fa?'selected':''}>${a}</option>`).join('');
+  vacio.style.display=lista.length?'none':'flex';
+
 }
 
 function ordenar(c){orden.dir=orden.campo===c?-orden.dir:1;orden.campo=c;render();}

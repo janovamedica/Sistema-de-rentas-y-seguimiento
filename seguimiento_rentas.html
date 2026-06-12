@@ -29,7 +29,6 @@
   --verde:#30D158; --verde-bg:rgba(48,209,88,.11);
   --ambar:#FF9F0A; --ambar-bg:rgba(255,159,10,.11);
   --rojo:#FF453A;  --rojo-bg:rgba(255,69,58,.11);
-  --sidebar-w:200px;
   --topbar-h:52px;
   --kpi-h:88px;
   --radius:14px; --radius-sm:10px;
@@ -94,18 +93,18 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
   background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:1px solid var(--border2);border-radius:var(--radius);
   padding:14px 16px;cursor:pointer;
-  transition:transform .12s,border-color .15s,box-shadow .15s;
+  cursor:pointer;transition:transform .12s,border-color .15s,box-shadow .15s;
   display:flex;flex-direction:column;justify-content:space-between;
 }
 .kpi-card:active{transform:scale(.97)}
-.kpi-card.c-activos  {border-top:2px solid var(--cian)}
-.kpi-card.c-nuevos   {border-top:2px solid var(--verde)}
-.kpi-card.c-porvencer{border-top:2px solid var(--ambar)}
-.kpi-card.c-concluidos{border-top:2px solid var(--label3)}
 .kpi-card.sel{
   box-shadow:0 0 0 1.5px var(--cian),0 0 20px var(--cian-glow);
   border-color:var(--cian)!important;
 }
+.kpi-card.c-activos  {border-top:2px solid var(--cian)}
+.kpi-card.c-nuevos   {border-top:2px solid var(--verde)}
+.kpi-card.c-porvencer{border-top:2px solid var(--ambar)}
+.kpi-card.c-concluidos{border-top:2px solid var(--label3)}
 .kpi-top{display:flex;align-items:flex-start;justify-content:space-between}
 .kpi-num{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.5px}
 .kpi-card.c-activos   .kpi-num{color:var(--cian)}
@@ -115,66 +114,68 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 .kpi-icon{font-size:18px;opacity:.5}
 .kpi-lbl{font-size:12px;color:var(--label2);line-height:1.3;margin-top:auto}
 
-/* ── APP BODY ── */
-.app-body{flex:1;display:flex;overflow:hidden;position:relative;z-index:10}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  width:var(--sidebar-w);flex-shrink:0;
-  background:var(--glass2);backdrop-filter:saturate(160%) blur(20px);
-  -webkit-backdrop-filter:saturate(160%) blur(20px);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow-y:auto;padding:10px 8px 20px;
+/* ── ESTADO BARRA HORIZONTAL ── */
+.estado-bar{
+  display:flex;align-items:center;gap:2px;flex-shrink:0;
+  padding:5px 14px;
+  background:var(--glass2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border2);position:relative;z-index:10;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
-.sidebar-title{font-size:11px;font-weight:600;color:var(--label3);text-transform:uppercase;
-  letter-spacing:.6px;padding:4px 10px 6px}
+.estado-bar::-webkit-scrollbar{display:none}
+.estado-label{
+  font-size:11px;font-weight:700;color:var(--label3);text-transform:uppercase;
+  letter-spacing:.6px;white-space:nowrap;margin-right:4px;flex-shrink:0;
+}
 .nav-item{
-  display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);
-  font-size:14px;cursor:pointer;color:var(--label2);
-  border:none;background:none;width:100%;text-align:left;font-family:var(--sf);
-  transition:background .1s,color .1s;
+  display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;
+  font-size:11px;cursor:pointer;color:var(--label2);
+  border:1px solid transparent;background:none;white-space:nowrap;
+  font-family:var(--sf);transition:background .1s,color .1s;flex-shrink:0;
 }
 .nav-item:active{background:var(--fill2)}
-.nav-item.activo{background:rgba(0,200,255,.1);color:var(--label);font-weight:500}
-.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nav-item.activo{background:rgba(0,200,255,.12);color:var(--label);font-weight:600;border-color:rgba(0,200,255,.2)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .nd-todos    {background:var(--label3)}
 .nd-vigente  {background:var(--verde);box-shadow:0 0 5px rgba(48,209,88,.5)}
 .nd-porvencer{background:var(--ambar);box-shadow:0 0 5px rgba(255,159,10,.5)}
 .nd-hoy      {background:var(--ambar)}
 .nd-vencido  {background:var(--rojo);box-shadow:0 0 5px rgba(255,69,58,.5)}
 .nd-concluido{background:var(--label3)}
-.nav-count{margin-left:auto;font-size:11px;background:var(--fill2);
-  padding:2px 7px;border-radius:99px;color:var(--label2)}
-.sidebar-divider{height:1px;background:var(--border2);margin:8px 4px}
-.sidebar-footer{margin-top:auto;padding-top:10px}
-.btn-csv-side{
-  width:100%;padding:9px 10px;background:var(--fill2);border:1px solid var(--border2);
-  border-radius:var(--radius-sm);font-family:var(--sf);font-size:13px;color:var(--label2);
-  cursor:pointer;text-align:left;display:flex;align-items:center;gap:7px;
+.nav-count{font-size:10px;background:var(--fill2);padding:1px 5px;border-radius:99px;color:var(--label2)}
+.estado-bar-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;padding-left:10px;border-left:1px solid var(--border2)}
+.btn-csv-bar{
+  display:flex;align-items:center;gap:4px;padding:5px 9px;
+  background:var(--fill2);border:1px solid var(--border2);border-radius:var(--radius-sm);
+  font-family:var(--sf);font-size:11px;color:var(--label2);cursor:pointer;white-space:nowrap;
 }
-.btn-csv-side:active{opacity:.7}
+.btn-csv-bar:active{opacity:.7}
+
+/* ── APP BODY (sin sidebar) ── */
+.app-body{flex:1;display:flex;overflow:hidden;position:relative;z-index:10}
 50%{opacity:.3}}
 
 /* ── MAIN ── */
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .main-toolbar{
-  padding:9px 14px;display:flex;gap:8px;align-items:center;flex-shrink:0;
+  padding:7px 14px;display:flex;gap:8px;align-items:center;flex-shrink:0;
   border-bottom:1px solid var(--border2);
 }
 .ios-select{
-  padding:7px 11px;background:var(--fill2);border:1px solid var(--border2);
-  border-radius:var(--radius-sm);font-family:var(--sf);font-size:13px;color:var(--label);cursor:pointer;
+  padding:5px 10px;background:var(--fill2);border:1px solid var(--border2);
+  border-radius:var(--radius-sm);font-family:var(--sf);font-size:11px;color:var(--label);cursor:pointer;
   -webkit-appearance:none;appearance:none;
 }
 .ios-select option{background:#0D1828}
 .ios-select:focus{outline:none;border-color:rgba(0,200,255,.3)}
-.toolbar-count{font-size:12px;color:var(--label3);margin-left:auto}
+.toolbar-count{font-size:11px;color:var(--label3);margin-left:auto}
 
 /* ── TABLA ── */
-.tabla-scroll{flex:1;overflow:auto;padding:10px 14px 18px}
+.tabla-scroll{flex:1;overflow:auto;padding:10px 14px 18px;display:flex;flex-direction:column}
 .tabla-wrap{
   background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+  flex:1;display:flex;flex-direction:column;
 }
 table{width:100%;border-collapse:collapse;min-width:700px}
 th{
@@ -279,33 +280,25 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
   border-radius:var(--radius);font-family:var(--sf);font-size:16px;cursor:pointer;display:none;
 }
 
-/* ── Responsive iPad 10.1" landscape (1024×768) ── */
+/* ── Responsive ── */
 @media(max-width:760px){
-  :root{--sidebar-w:0px;--kpi-h:76px;--topbar-h:48px}
-  .sidebar{display:none}
+  :root{--kpi-h:76px;--topbar-h:48px}
   .brand{display:none}
   .topbar-sep{display:none}
   .kpi-row{grid-template-columns:repeat(2,1fr);gap:7px;padding:8px 12px}
 }
-/* iPad 10.1" landscape: 1024px */
 @media(min-width:761px) and (max-width:1100px){
-  :root{--sidebar-w:180px;--topbar-h:48px;--kpi-h:80px}
+  :root{--topbar-h:48px;--kpi-h:80px}
   .kpi-row{gap:8px;padding:8px 12px}
   .kpi-num{font-size:24px}
   .kpi-lbl{font-size:11px}
   .topbar{padding:0 12px}
-  .topbar-brand{padding:0 12px}
-  .brand-name{font-size:13px}
   th{font-size:10px;padding:8px 10px}
   td{font-size:12.5px;padding:8px 10px}
   .btn-nueva{font-size:13px;padding:7px 12px}
   .main-toolbar{padding:7px 12px}
   .tabla-scroll{padding:8px 12px 14px}
-  .sidebar{padding:8px 6px 16px}
-  .nav-item{font-size:13px;padding:8px 8px}
-  .btn-csv-side{font-size:12px;padding:8px 9px}
 }
-@media(min-width:1100px){:root{--sidebar-w:210px}}
 </style>
 </head>
 <body>
@@ -362,50 +355,48 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
   </div>
 </div>
 
+<!-- ESTADO BARRA HORIZONTAL -->
+<div class="estado-bar">
+  <span class="estado-label">ESTADO</span>
+  <button class="nav-item activo" data-estado="" onclick="setEstado('')">
+    <span class="nav-dot nd-todos"></span>Todos
+    
+  </button>
+  <button class="nav-item" data-estado="vigente" onclick="setEstado('vigente')">
+    <span class="nav-dot nd-vigente"></span>Vigente
+    
+  </button>
+  <button class="nav-item" data-estado="porvencer" onclick="setEstado('porvencer')">
+    <span class="nav-dot nd-porvencer"></span>Por vencer
+    
+  </button>
+  <button class="nav-item" data-estado="hoy" onclick="setEstado('hoy')">
+    <span class="nav-dot nd-hoy"></span>Vence hoy
+    
+  </button>
+  <button class="nav-item" data-estado="vencido" onclick="setEstado('vencido')">
+    <span class="nav-dot nd-vencido"></span>Vencido
+    
+  </button>
+  <button class="nav-item" data-estado="concluido" onclick="setEstado('concluido')">
+    <span class="nav-dot nd-concluido"></span>Concluido
+    
+  </button>
+  <div class="estado-bar-actions">
+    <button class="btn-csv-bar" onclick="exportarXLSX()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Excel
+    </button>
+    <button class="btn-csv-bar" style="color:var(--cian)" onclick="document.getElementById('fileImport').click()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Importar
+    </button>
+    <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="importarXLSX(this)">
+  </div>
+</div>
+
 <!-- BODY -->
 <div class="app-body">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-title">Estado</div>
-    <button class="nav-item activo" data-estado="" onclick="setEstado('')">
-      <span class="nav-dot nd-todos"></span>Todos
-      <span class="nav-count" id="nc-todos">0</span>
-    </button>
-    <button class="nav-item" data-estado="vigente" onclick="setEstado('vigente')">
-      <span class="nav-dot nd-vigente"></span>Vigente
-      <span class="nav-count" id="nc-vigente">0</span>
-    </button>
-    <button class="nav-item" data-estado="porvencer" onclick="setEstado('porvencer')">
-      <span class="nav-dot nd-porvencer"></span>Por vencer
-      <span class="nav-count" id="nc-porvencer">0</span>
-    </button>
-    <button class="nav-item" data-estado="hoy" onclick="setEstado('hoy')">
-      <span class="nav-dot nd-hoy"></span>Vence hoy
-      <span class="nav-count" id="nc-hoy">0</span>
-    </button>
-    <button class="nav-item" data-estado="vencido" onclick="setEstado('vencido')">
-      <span class="nav-dot nd-vencido"></span>Vencido
-      <span class="nav-count" id="nc-vencido">0</span>
-    </button>
-    <button class="nav-item" data-estado="concluido" onclick="setEstado('concluido')">
-      <span class="nav-dot nd-concluido"></span>Concluido
-      <span class="nav-count" id="nc-concluido">0</span>
-    </button>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-footer">
-      <button class="btn-csv-side" onclick="exportarXLSX()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar Excel
-      </button>
-      <button class="btn-csv-side" style="margin-top:6px;color:var(--cian);border-color:rgba(0,200,255,.2)" onclick="document.getElementById('fileImport').click()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Importar Excel
-      </button>
-      <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="importarXLSX(this)">
-
-    </div>
-  </aside>
 
   <!-- MAIN -->
   <main class="main">
@@ -447,8 +438,6 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
     </div>
   </main>
 </div>
-
-<!-- SHEET MODAL -->
 <div class="modal-fondo" id="modalFondo" onclick="if(event.target===this)cerrarModal()">
   <div class="sheet">
     <div class="sheet-handle"></div>

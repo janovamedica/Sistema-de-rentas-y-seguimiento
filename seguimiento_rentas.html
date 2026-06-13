@@ -45,7 +45,8 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 /* ── TOPBAR ── */
 .topbar{
   height:calc(var(--topbar-h) + env(safe-area-inset-top));
-  padding-top:env(safe-area-inset-top);
+  padding-top:calc(env(safe-area-inset-top) + 6px);
+  padding-bottom:6px;
   padding-left:max(16px, env(safe-area-inset-left));
   padding-right:max(16px, env(safe-area-inset-right));
   display:flex;align-items:center;gap:12px;
@@ -74,6 +75,13 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 #busqueda::placeholder{color:var(--label3)}
 #busqueda:focus{outline:none;border-color:rgba(0,200,255,.35);background:rgba(0,200,255,.05)}
 .topbar-date{font-size:12px;color:var(--label2);white-space:nowrap}
+.btn-tool{
+  display:flex;align-items:center;gap:5px;padding:7px 12px;
+  background:var(--fill2);border:1px solid var(--border2);border-radius:10px;
+  font-family:var(--sf);font-size:13px;color:var(--label2);cursor:pointer;white-space:nowrap;
+  flex-shrink:0;transition:opacity .12s;
+}
+.btn-tool:active{opacity:.7}
 .btn-nueva{
   display:flex;align-items:center;gap:6px;padding:8px 15px;
   background:var(--cian);color:#030E18;border:none;border-radius:10px;
@@ -129,7 +137,7 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 .tabla-wrap{
   background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-  flex:1;display:flex;flex-direction:column;
+  flex:1;display:flex;flex-direction:column;min-height:0;height:100%;
 }
 table{width:100%;border-collapse:collapse;min-width:700px}
 th{
@@ -271,6 +279,15 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
     <input type="search" id="busqueda" placeholder="Buscar cliente, equipo o artículo…" oninput="render()">
   </div>
   <span class="topbar-date" id="fechaHoy"></span>
+  <button class="btn-tool" onclick="exportarXLSX()" title="Exportar Excel">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Exportar
+  </button>
+  <button class="btn-tool" onclick="document.getElementById('fileImport').click()" title="Importar Excel">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Importar
+  </button>
+  <input type="file" id="fileImport" accept=".xlsx,.xls" style="display:none" onchange="importarXLSX(this)">
   <button class="btn-nueva" onclick="abrirModal()">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
     Nueva renta

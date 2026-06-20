@@ -717,6 +717,31 @@ function importarXLSX(input){
 fechaHoy.textContent=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
 render();
 
+/* ── Recalcular días/estado automáticamente ──
+   Las apps PWA standalone no se recargan al quedar en segundo plano,
+   por lo que los "días restantes" se congelan. Esto refresca: */
+let _ultimoDiaRenderizado=new Date().toDateString();
+
+function refrescarSiCambioDeDia(){
+  const hoyStr=new Date().toDateString();
+  if(hoyStr!==_ultimoDiaRenderizado){
+    _ultimoDiaRenderizado=hoyStr;
+    fechaHoy.textContent=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  }
+  render();
+}
+
+// Recalcular cada 60 segundos mientras la app esté abierta
+setInterval(refrescarSiCambioDeDia, 60000);
+
+// Recalcular inmediatamente cuando la app regresa a primer plano
+// (ej. el usuario la trae de vuelta tras minimizarla o tras bloquear la pantalla)
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible') refrescarSiCambioDeDia();
+});
+window.addEventListener('focus',refrescarSiCambioDeDia);
+window.addEventListener('pageshow',refrescarSiCambioDeDia);
+
 
 </script>
 </body>

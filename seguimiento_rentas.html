@@ -341,7 +341,7 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
             <th onclick="ordenar('id')">ID</th>
             <th onclick="ordenar('articulo')">Artículo</th>
             <th onclick="ordenar('idEquipo')">ID Equipo</th>
-            <th onclick="ordenar('fechaInicio')">Entrega equipo</th><th onclick="ordenar('fechaEntrega')">Contrato actual</th>
+            <th onclick="ordenar('fechaInicio')">Fechas</th>
             <th>Meses</th>
             <th onclick="ordenar('fechaConclusion')">Conclusión</th>
             <th onclick="ordenar('dias')">Tiempo</th>
@@ -559,7 +559,7 @@ function render(){
       <td class="id-txt">${r.id}</td>
       <td class="cell-art"><b>${r.articulo}</b><br><span class="tipo-badge ${r.tipo==='Renovación'?'t-renov':'t-nuevo'}">${r.tipo}</span></td>
       <td>${r.idEquipo?`<span class="id-equipo">${r.idEquipo}</span>`:'—'}</td>
-      <td>${r.fechaInicio?fmtISO(r.fechaInicio):fmtISO(r.fechaEntrega)}</td><td>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?fmtISO(r.fechaEntrega):"—"}</td><td>${r.meses}</td>
+      <td><span style="display:block;font-size:11px;color:var(--label2)">Entrega: ${r.fechaInicio?fmtISO(r.fechaInicio):fmtISO(r.fechaEntrega)}</span>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?'<span style="display:block;font-size:11px;color:var(--ambar);margin-top:2px">↺ Renovado: '+fmtISO(r.fechaEntrega)+'</span>':''}</td><td>${r.meses}</td>
       <td>${fmtF(r._fc)}</td>
       <td class="dias ${cd}">${e==='concluido'?'—':textoDias(n)}</td>
       <td><span class="pill p-${e}">${ETIQ[e]}</span></td>

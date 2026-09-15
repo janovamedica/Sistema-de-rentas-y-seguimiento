@@ -341,7 +341,7 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
             <th onclick="ordenar('id')">ID</th>
             <th onclick="ordenar('articulo')">Artículo</th>
             <th onclick="ordenar('idEquipo')">ID Equipo</th>
-            <th onclick="ordenar('fechaEntrega')">Entrega</th>
+            <th onclick="ordenar('fechaEntrega')">Entrega actual</th><th onclick="ordenar('fechaInicio')">Inicio original</th>
             <th>Meses</th>
             <th onclick="ordenar('fechaConclusion')">Conclusión</th>
             <th onclick="ordenar('dias')">Tiempo</th>
@@ -373,7 +373,15 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
       <div class="form-group">
         <div class="form-row"><label>Equipo</label><input type="text" id="fArticulo" placeholder="Ej. Concentrador de oxígeno"></div>
         <div class="form-row"><label>ID Equipo</label><input type="text" id="fIdEquipo" placeholder="CAM-003"></div>
-        <div class="form-row"><label>Tipo</label><select id="fTipo"><option>Nuevo</option><option>Renovación</option></select></div>
+        <div class="form-row"><label>Tipo</label><select id="fTipo" onchange="onTipoChange()"><option>Nuevo</option><option>Renovación</option></select></div>
+      </div>
+      <div class="form-group" id="grupoRenovacion" style="display:none">
+        <div class="form-row">
+          <label style="color:var(--ambar);font-weight:600">Renovación</label>
+          <button type="button" onclick="aplicarRenovacion()" style="flex:1;margin:8px 14px 8px 0;padding:8px 12px;background:var(--ambar-bg);border:1px solid var(--ambar);border-radius:8px;font-family:var(--sf);font-size:14px;font-weight:600;color:var(--ambar);cursor:pointer;">
+            ↻ Calcular nueva fecha desde conclusión actual
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <div class="form-row"><label>Entrega</label><input type="date" id="fFechaEntrega" onchange="previewCalc()"></div>
@@ -551,7 +559,7 @@ function render(){
       <td class="id-txt">${r.id}</td>
       <td class="cell-art"><b>${r.articulo}</b><br><span class="tipo-badge ${r.tipo==='Renovación'?'t-renov':'t-nuevo'}">${r.tipo}</span></td>
       <td>${r.idEquipo?`<span class="id-equipo">${r.idEquipo}</span>`:'—'}</td>
-      <td>${fmtISO(r.fechaEntrega)}</td><td>${r.meses}</td>
+      <td>${fmtISO(r.fechaEntrega)}</td><td>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?'<span style="font-size:11px;color:var(--ambar);font-weight:600">↺ '+fmtISO(r.fechaInicio)+'</span>':"—"}</td><td>${r.meses}</td>
       <td>${fmtF(r._fc)}</td>
       <td class="dias ${cd}">${e==='concluido'?'—':textoDias(n)}</td>
       <td><span class="pill p-${e}">${ETIQ[e]}</span></td>
@@ -576,6 +584,8 @@ function abrirModal(id){
   fIdEquipo.value=r?r.idEquipo||'':'';
   fTipo.value=r?r.tipo:'Nuevo';
   fFechaEntrega.value=r?r.fechaEntrega:new Date().toISOString().slice(0,10);
+  if(r&&r.tipo==='Renovación') document.getElementById('grupoRenovacion').style.display='block';
+  else document.getElementById('grupoRenovacion').style.display='none';
   fMeses.value=r?r.meses:1;
   fCliente.value=r?r.cliente:'';
   fTelefono.value=r?r.telefono||'':'';
@@ -602,8 +612,17 @@ function guardar(){
     cliente:fCliente.value.trim(),telefono:fTelefono.value.trim(),
     direccion:fDireccion.value.trim(),concluido:fConcluido.value==='si'
   };
-  if(editId){Object.assign(datos.find(x=>x.id===editId),reg);}
-  else{reg.id=datos.length?Math.max(...datos.map(x=>x.id))+1:1;reg.concluido=false;datos.push(reg);}
+  if(editId){
+    const existing=datos.find(x=>x.id===editId);
+    // Conservar fecha de inicio original — nunca se sobreescribe
+    reg.fechaInicio = existing.fechaInicio || existing.fechaEntrega;
+    Object.assign(existing,reg);
+  }else{
+    reg.id=datos.length?Math.max(...datos.map(x=>x.id))+1:1;
+    reg.concluido=false;
+    reg.fechaInicio=reg.fechaEntrega; // primer contrato: inicio = entrega
+    datos.push(reg);
+  }
   localStorage.setItem(LS,JSON.stringify(datos));
   cerrarModal();render();
 }
@@ -739,6 +758,26 @@ document.addEventListener('visibilitychange',()=>{
 });
 window.addEventListener('focus',refrescarSiCambioDeDia);
 window.addEventListener('pageshow',refrescarSiCambioDeDia);
+
+function onTipoChange(){
+  const tipo=document.getElementById('fTipo').value;
+  document.getElementById('grupoRenovacion').style.display=tipo==='Renovación'?'block':'none';
+}
+
+function aplicarRenovacion(){
+  if(!editId) return;
+  const r=datos.find(x=>x.id===editId);
+  if(!r){alert('Guarda el registro primero.');return;}
+  const fc=fechaConclusion(r.fechaEntrega,r.meses);
+  if(!fc){alert('El registro no tiene fecha de conclusión calculada.');return;}
+  // Nueva entrega = día siguiente a la conclusión actual
+  const nuevaEntrega=new Date(fc);
+  nuevaEntrega.setDate(nuevaEntrega.getDate()+1);
+  const iso=nuevaEntrega.toISOString().slice(0,10);
+  document.getElementById('fFechaEntrega').value=iso;
+  previewCalc();
+}
+
 
 /* ── Altura dinámica tabla para Safari iPad ── */
 function ajustarAlturaTablа(){

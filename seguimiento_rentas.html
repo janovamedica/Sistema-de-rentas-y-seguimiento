@@ -144,13 +144,13 @@ body{font-family:var(--sf);color:var(--label);font-size:15px;
 }
 table{width:100%;border-collapse:collapse;}
 th{
-  padding:9px 13px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+  padding:8px 9px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
   color:var(--cian);text-align:left;white-space:nowrap;cursor:pointer;user-select:none;
   background:rgba(0,200,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
 }
 th:active{opacity:.7}
-td{padding:11px 13px;border-top:1px solid var(--border2);font-size:13.5px;vertical-align:middle;color:var(--label)}
+td{padding:8px 9px;border-top:1px solid var(--border2);font-size:12px;vertical-align:middle;color:var(--label)}
 tr:last-child td{border-bottom:none}
 tr.r-vencido td{background:rgba(255,69,58,.05)}
 tr.r-hoy     td{background:rgba(255,159,10,.05)}
@@ -341,7 +341,7 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
             <th onclick="ordenar('id')">ID</th>
             <th onclick="ordenar('articulo')">Artículo</th>
             <th onclick="ordenar('idEquipo')">ID Equipo</th>
-            <th onclick="ordenar('fechaEntrega')">Entrega actual</th><th onclick="ordenar('fechaInicio')">Inicio original</th>
+            <th onclick="ordenar('fechaInicio')">Entrega equipo</th><th onclick="ordenar('fechaEntrega')">Contrato actual</th>
             <th>Meses</th>
             <th onclick="ordenar('fechaConclusion')">Conclusión</th>
             <th onclick="ordenar('dias')">Tiempo</th>
@@ -559,7 +559,7 @@ function render(){
       <td class="id-txt">${r.id}</td>
       <td class="cell-art"><b>${r.articulo}</b><br><span class="tipo-badge ${r.tipo==='Renovación'?'t-renov':'t-nuevo'}">${r.tipo}</span></td>
       <td>${r.idEquipo?`<span class="id-equipo">${r.idEquipo}</span>`:'—'}</td>
-      <td>${fmtISO(r.fechaEntrega)}</td><td>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?'<span style="font-size:11px;color:var(--ambar);font-weight:600">↺ '+fmtISO(r.fechaInicio)+'</span>':"—"}</td><td>${r.meses}</td>
+      <td>${r.fechaInicio?fmtISO(r.fechaInicio):fmtISO(r.fechaEntrega)}</td><td>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?fmtISO(r.fechaEntrega):"—"}</td><td>${r.meses}</td>
       <td>${fmtF(r._fc)}</td>
       <td class="dias ${cd}">${e==='concluido'?'—':textoDias(n)}</td>
       <td><span class="pill p-${e}">${ETIQ[e]}</span></td>

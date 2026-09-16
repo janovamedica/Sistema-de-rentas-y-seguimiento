@@ -615,13 +615,13 @@ function guardar(){
   };
   if(editId){
     const existing=datos.find(x=>x.id===editId);
-    // Conservar fecha de inicio original — nunca se sobreescribe
-    reg.fechaInicio = existing.fechaInicio || existing.fechaEntrega;
+    const fechaInicioOriginal = existing.fechaInicio || existing.fechaEntrega;
     Object.assign(existing,reg);
+    existing.fechaInicio = fechaInicioOriginal; // restaurar DESPUÉS del assign
   }else{
     reg.id=datos.length?Math.max(...datos.map(x=>x.id))+1:1;
     reg.concluido=false;
-    reg.fechaInicio=reg.fechaEntrega; // primer contrato: inicio = entrega
+    reg.fechaInicio=reg.fechaEntrega;
     datos.push(reg);
   }
   localStorage.setItem(LS,JSON.stringify(datos));
@@ -762,13 +762,13 @@ window.addEventListener('pageshow',refrescarSiCambioDeDia);
 
 
 function mesesTotales(r){
-  // Desde la fecha de entrega original hasta la fecha de conclusión actual
   const inicio = r.fechaInicio || r.fechaEntrega;
-  const fc = fechaConclusion(r.fechaEntrega, r.meses);
-  if(!inicio || !fc) return r.meses;
+  if(!inicio) return r.meses;
+  // Calcular meses desde fechaInicio hasta fechaEntrega actual + meses del contrato
   const d1 = new Date(inicio + 'T00:00');
-  const meses = (fc.getFullYear() - d1.getFullYear()) * 12 + (fc.getMonth() - d1.getMonth());
-  return meses > 0 ? meses : r.meses;
+  const d2 = new Date(r.fechaEntrega + 'T00:00');
+  const mesesAnteriores = (d2.getFullYear()-d1.getFullYear())*12 + (d2.getMonth()-d1.getMonth());
+  return mesesAnteriores + Number(r.meses);
 }
 
 function onTipoChange(){
@@ -777,16 +777,16 @@ function onTipoChange(){
 }
 
 function aplicarRenovacion(){
-  if(!editId) return;
-  const r=datos.find(x=>x.id===editId);
-  if(!r){alert('Guarda el registro primero.');return;}
-  const fc=fechaConclusion(r.fechaEntrega,r.meses);
-  if(!fc){alert('El registro no tiene fecha de conclusión calculada.');return;}
+  // Leer fecha y meses del formulario actual (no del registro guardado)
+  const fechaActual = document.getElementById('fFechaEntrega').value;
+  const mesesActual = document.getElementById('fMeses').value;
+  if(!fechaActual||!mesesActual){alert('Completa la fecha de entrega y meses primero.');return;}
+  const fc=fechaConclusion(fechaActual, mesesActual);
+  if(!fc){alert('No se puede calcular la fecha de conclusión.');return;}
   // Nueva entrega = día siguiente a la conclusión actual
   const nuevaEntrega=new Date(fc);
   nuevaEntrega.setDate(nuevaEntrega.getDate()+1);
-  const iso=nuevaEntrega.toISOString().slice(0,10);
-  document.getElementById('fFechaEntrega').value=iso;
+  document.getElementById('fFechaEntrega').value=nuevaEntrega.toISOString().slice(0,10);
   previewCalc();
 }
 

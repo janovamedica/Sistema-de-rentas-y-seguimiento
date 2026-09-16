@@ -342,7 +342,7 @@ tr.r-hoy     td{background:rgba(255,159,10,.05)}
             <th onclick="ordenar('articulo')">Artículo</th>
             <th onclick="ordenar('idEquipo')">ID Equipo</th>
             <th onclick="ordenar('fechaInicio')">Fechas</th>
-            <th>Meses</th>
+            <th onclick="ordenar('mesesTotal')">Total meses</th>
             <th onclick="ordenar('fechaConclusion')">Conclusión</th>
             <th onclick="ordenar('dias')">Tiempo</th>
             <th>Estado</th>
@@ -544,6 +544,7 @@ function render(){
   lista.sort((a,b)=>{
     let va,vb;const c=orden.campo;
     if(c==='dias'){va=a._d;vb=b._d;}
+    else if(c==='mesesTotal'){va=mesesTotales(a);vb=mesesTotales(b);}
     else if(c==='fechaConclusion'){va=a._fc;vb=b._fc;}
     else{va=a[c];vb=b[c];}
     if(typeof va==='string'){va=va.toLowerCase();vb=(vb||'').toLowerCase();}
@@ -559,7 +560,7 @@ function render(){
       <td class="id-txt">${r.id}</td>
       <td class="cell-art"><b>${r.articulo}</b><br><span class="tipo-badge ${r.tipo==='Renovación'?'t-renov':'t-nuevo'}">${r.tipo}</span></td>
       <td>${r.idEquipo?`<span class="id-equipo">${r.idEquipo}</span>`:'—'}</td>
-      <td><span style="display:block;font-size:11px;color:var(--label2)">Entrega: ${r.fechaInicio?fmtISO(r.fechaInicio):fmtISO(r.fechaEntrega)}</span>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?'<span style="display:block;font-size:11px;color:var(--ambar);margin-top:2px">↺ Renovado: '+fmtISO(r.fechaEntrega)+'</span>':''}</td><td>${r.meses}</td>
+      <td><span style="display:block;font-size:11px;color:var(--label2)">Entrega: ${r.fechaInicio?fmtISO(r.fechaInicio):fmtISO(r.fechaEntrega)}</span>${r.fechaInicio&&r.fechaInicio!==r.fechaEntrega?'<span style="display:block;font-size:11px;color:var(--ambar);margin-top:2px">↺ Renovado: '+fmtISO(r.fechaEntrega)+'</span>':''}</td><td style="text-align:center;font-weight:700">${mesesTotales(r)}</td>
       <td>${fmtF(r._fc)}</td>
       <td class="dias ${cd}">${e==='concluido'?'—':textoDias(n)}</td>
       <td><span class="pill p-${e}">${ETIQ[e]}</span></td>
@@ -758,6 +759,17 @@ document.addEventListener('visibilitychange',()=>{
 });
 window.addEventListener('focus',refrescarSiCambioDeDia);
 window.addEventListener('pageshow',refrescarSiCambioDeDia);
+
+
+function mesesTotales(r){
+  // Desde la fecha de entrega original hasta la fecha de conclusión actual
+  const inicio = r.fechaInicio || r.fechaEntrega;
+  const fc = fechaConclusion(r.fechaEntrega, r.meses);
+  if(!inicio || !fc) return r.meses;
+  const d1 = new Date(inicio + 'T00:00');
+  const meses = (fc.getFullYear() - d1.getFullYear()) * 12 + (fc.getMonth() - d1.getMonth());
+  return meses > 0 ? meses : r.meses;
+}
 
 function onTipoChange(){
   const tipo=document.getElementById('fTipo').value;

@@ -660,17 +660,17 @@ function borrarRegistro(){
 function exportarXLSX(){
   if(!window.XLSX){ alert('Cargando librería, intenta de nuevo en un momento.'); return; }
   const XLSX=window.XLSX;
-  const encabezados=['ID','Artículo','ID Equipo','Tipo','Fecha Entrega','Meses','Fecha Conclusión','Días Restantes','Estado','Cliente','Teléfono','Dirección'];
+  const encabezados=['ID','Artículo','ID Equipo','Tipo','Entrega Original','Fecha Entrega','Meses','Fecha Conclusión','Días Restantes','Estado','Cliente','Teléfono','Dirección'];
   const filas=datos.map(r=>{
     const fc=fechaConclusion(r.fechaEntrega,r.meses),e=estado(r);
     const dias=e==='concluido'?'':textoDias(diasRestantes(fc));
-    return[r.id,r.articulo,r.idEquipo||'',r.tipo,fmtISO(r.fechaEntrega),r.meses,fmtF(fc),dias,ETIQ[e],r.cliente,r.telefono||'',r.direccion||''];
+    return[r.id,r.articulo,r.idEquipo||'',r.tipo,fmtISO(r.fechaInicio||r.fechaEntrega),fmtISO(r.fechaEntrega),r.meses,fmtF(fc),dias,ETIQ[e],r.cliente,r.telefono||'',r.direccion||''];
   });
 
   const ws=XLSX.utils.aoa_to_sheet([encabezados,...filas]);
 
   // Ancho de columnas
-  ws['!cols']=[{wch:5},{wch:28},{wch:12},{wch:12},{wch:14},{wch:7},{wch:14},{wch:22},{wch:13},{wch:24},{wch:13},{wch:40}];
+  ws['!cols']=[{wch:5},{wch:28},{wch:12},{wch:12},{wch:14},{wch:14},{wch:7},{wch:14},{wch:22},{wch:13},{wch:24},{wch:13},{wch:40}];
 
   // Estilo encabezado — usando cellStyles si disponible
   encabezados.forEach((_,ci)=>{
@@ -727,12 +727,16 @@ function importarXLSX(input){
         idEquipo: get(row,'idequipo','id equipo','IDEquipo','ID Equipo'),
         tipo: get(row,'tipo','Tipo')||'Nuevo',
         fechaEntrega: parseDate(get(row,'fechaentrega','fecha entrega','Fecha Entrega')||row['Fecha Entrega']||''),
+        fechaInicio: parseDate(get(row,'entregaoriginal','entrega original','Entrega Original','fechainicio','Fecha Inicio')||''),
         meses: parseInt(get(row,'meses','Meses'))||1,
         cliente: get(row,'cliente','Cliente'),
         telefono: get(row,'teléfono','telefono','Teléfono'),
         direccion: get(row,'dirección','direccion','Dirección'),
         concluido: ['concluido','sí','si','yes','true'].includes(get(row,'estatus','Estado','concluido').toLowerCase())
-      })).filter(r=>r.articulo&&r.cliente);
+      })).filter(r=>r.articulo&&r.cliente).map(r=>{
+        if(!r.fechaInicio) r.fechaInicio=r.fechaEntrega;
+        return r;
+      });
 
       if(!importados.length){ alert('No se encontraron registros válidos.\nVerifica que el archivo tenga columnas: Artículo, Cliente, Fecha Entrega, Meses.'); return; }
 
